@@ -10,27 +10,6 @@ provider:
   runtime: nodejs12.x
   stage: ${opt:stage, 'local'}
   role: 'arn:aws:iam::865286859051:role/backend-lambda-role'
-  # iamRoleStatements:
-  #   - Effect: Allow
-  #     Action:
-  #       - dynamodb:*
-  #       - lambda:*
-  #       - s3:*
-  #     Resource:
-  #       - arn:aws:dynamodb:${self:provider.region}:*:*
-  #       - arn:aws:lambda:${self:provider.region}:*:*
-  #   - Effect: Allow
-  #     Action:
-  #       - ses:*
-  #     Resource: '*'
-  #   - Effect: Allow
-  #     Action:
-  #       - cognito-idp:*
-  #     Resource: '*'
-  #   - Effect: Allow
-  #     Action:
-  #       - events:*
-  #     Resource: '*'
 
   environment:
     SENDER_EMAIL: ${ssm:/parkyourself/sender/email}
