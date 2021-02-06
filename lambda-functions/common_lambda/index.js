@@ -1,38 +1,38 @@
-const cognito = require("./utils/Cognito");
-const { mailer } = require("../../utils/mailer");
+const cognito = require('./utils/Cognito');
+const { mailer } = require('../../utils/mailer');
 
 exports.handler = async (event) => {
   try {
     switch (event.type) {
-      case "listUsersInGroup":
+      case 'listUsersInGroup':
         return (await cognito.listUsersInGroup(event.arguments)).Users;
-      case "adminListAllUsers":
+      case 'adminListAllUsers':
         return await cognito.listAllUsers(event.arguments);
-      case "listCognitoUsersByEmail":
+      case 'listCognitoUsersByEmail':
         return (await cognito.listUsers(event.arguments)).Users;
-      case "createGroup":
+      case 'createGroup':
         return await cognito.createGroup(event.arguments);
-      case "deleteGroup":
+      case 'deleteGroup':
         return await cognito.deleteGroup(event.arguments);
-      case "adminAddUserToGroup":
+      case 'adminAddUserToGroup':
         return await cognito.adminAddUserToGroup(event.arguments);
-      case "adminRemoveUserFromGroup":
+      case 'adminRemoveUserFromGroup':
         return await cognito.adminRemoveUserFromGroup(event.arguments);
-      case "adminUpdateUserAttributes":
+      case 'adminUpdateUserAttributes':
         return await cognito.adminUpdateUserAttributes(event.arguments);
-      case "adminToggleUserStatus":
+      case 'adminToggleUserStatus':
         return await cognito.adminToggleUserStatus(event.arguments);
-      case "adminAddUserToGroupRole":
+      case 'adminAddUserToGroupRole':
         await cognito.adminAddUserToGroup(event.arguments);
         await cognito.adminUpdateUserAttributes({
-          name: "custom:role",
-          value: event.arguments.value,
+          name: 'custom:role',
+          value: event.arguments.role,
         });
         // Send Email to driver and space owner
         const tempData = {
           emails: [event.arguments.email],
-          subject: "You are added as staff member",
-          message: "You are added as staff member to a parking on parkyourself",
+          subject: 'You are added as staff member',
+          message: 'You are added as staff member to a parking on parkyourself',
         };
         return await mailer(tempData);
       default:

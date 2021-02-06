@@ -9,7 +9,7 @@ provider:
   region: us-east-1
   runtime: nodejs12.x
   stage: ${opt:stage, 'local'}
-  role: 'arn:aws:iam::865286859051:role/backend-lambda-role'
+  role: 'arn:aws:iam::784380094623:role/backend-lambda-role'
 
   environment:
     SENDER_EMAIL: ${ssm:/parkyourself/sender/email}
