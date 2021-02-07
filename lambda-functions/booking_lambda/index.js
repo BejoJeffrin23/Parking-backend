@@ -161,10 +161,10 @@ exports.handler = async (event) => {
         };
         await mailer(tempOwnerData);
         await mailer(tempDriverData);
-        await setupTransfer({
-          bookingId: newBooking._id,
-          end: newBooking.end,
-        });
+        // await setupTransfer({
+        //   bookingId: newBooking._id,
+        //   end: newBooking.end,
+        // });
         return newBooking;
       case 'updateBooking':
         return await Booking.findByIdAndUpdate(
