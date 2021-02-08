@@ -8,11 +8,6 @@ exports.handler = async (event) => {
     switch (event.type) {
       case 'getOneFee':
         return await Fee.findById(ObjectId(process.env.FEE_ID));
-      case 'createOneFee':
-        return await Fee.create({
-          ...event.arguments,
-          decimal: event.arguments.fee / 100,
-        });
       case 'updateOneFee':
         return await Fee.findByIdAndUpdate(
           ObjectId(process.env.FEE_ID),

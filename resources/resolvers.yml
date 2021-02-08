@@ -659,32 +659,11 @@
   request: formOption/mutation.deleteOneFormOption.vtl
   response: response.vtl
 # Fee
-# - dataSource: fee
-#   type: Query
-#   field: getOneFee
-#   request: fee/query.getOneFee.vtl
-#   response: response.vtl
-# - dataSource: fee
-#   type: Mutation
-#   field: createOneFee
-#   request: fee/mutation.createOneFee.vtl
-#   response: response.vtl
-# - dataSource: fee
-#   type: Mutation
-#   field: updateOneFee
-#   request: fee/mutation.updateOneFee.vtl
-#   response: response.vtl
-# Fee2
 - dataSource: fee2
   type: Query
   field: getOneFee
   request: fee2/query.getOneFee.vtl
   response: response.vtl
-  # - dataSource: fee2
-  # type: Mutation
-  # field: createOneFee
-  # request: fee/mutation.createOneFee.vtl
-  # response: response.vtl
 - dataSource: fee2
   type: Mutation
   field: updateOneFee
