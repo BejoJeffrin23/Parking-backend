@@ -43,7 +43,11 @@ exports.handler = async (event) => {
           (status === 'upcoming' || status === 'current')
         ) {
           await Booking.updateMany(
-            { status: status, ...tempFilter },
+            {
+              endDate: { $lte: Date.parse(new Date()) },
+              status: status,
+              ...tempFilter,
+            },
             { $set: { status: 'completed' } }
           );
         }
