@@ -7,10 +7,10 @@ exports.handler = async (event) => {
   console.log("lambda",event);
   try {
     switch (event.type) {
-      case 'getOnePolicyPolicy':
+      case 'getOnePrivacyPolicy':
         return await PolicyModel.findById(event.arguments.id);
       
-      case 'updateOnePolicyPolicy':
+      case 'updateOnePrivacyPolicy':
         return await PolicyModel.findByIdAndUpdate(
           event.arguments.id,
           {
