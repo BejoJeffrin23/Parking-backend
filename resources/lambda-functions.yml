@@ -46,3 +46,5 @@ fee2_lambda:
   handler: lambda-functions/fee2_lambda/index.handler
 user_lambda:
   handler: lambda-functions/user_lambda/index.handler
+privacyPolicy_lambda:
+  handler: lambda-functions/privacyPolicy_lambda/index.handler

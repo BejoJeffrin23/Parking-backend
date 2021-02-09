@@ -41,6 +41,7 @@ provider:
     USER_POOL_ID: ${ssm:/parkyourself/userpool}
     FEE_ID: ${ssm:/parkyourself/fee}
     TAX_ACCOUNT: ${ssm:/parkyourself/tax/account}
+    
 
 custom:
   appSync: # appsync plugin configuration

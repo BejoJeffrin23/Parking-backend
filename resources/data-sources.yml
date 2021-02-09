@@ -86,3 +86,7 @@
   name: user
   config:
     functionName: user_lambda
+- type: AWS_LAMBDA
+  name: privacyPolicy
+  config:
+    functionName: privacyPolicy_lambda

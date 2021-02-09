@@ -22,9 +22,10 @@ type Query {
 
   getOneFee2: String
   getOneFee: Fee
+  getOnePrivacyPolicy: PrivacyPolicy
   getOneFormOption(id: ID!): FormOption
   getAllFormOptions: [FormOption]
-
+  
   setupPayout(listingId: String!, triggerTimer: String!): Boolean
 
   checkBookingAvailability(
@@ -199,6 +200,7 @@ type Mutation {
   deleteOneDemo(id: ID!, updatedBy: String!): Boolean
   createOneFee(fee: Int!, createdBy: String!): Fee
   updateOneFee(fee: Int!, updatedBy: String!): Fee
+  updateOnePrivacyPolicy(details: String!, updatedBy: String!): PrivacyPolicy
   createOneFormOption(
     title: String!
     formName: String!
@@ -600,6 +602,15 @@ type Demo {
 type Fee {
   fee: Int
   decimal: Float
+  createdAt: String
+  updatedAt: String
+  createdBy: String
+  updatedBy: String
+  published: Boolean
+}
+
+type PrivacyPolicy {
+  details: String
   createdAt: String
   updatedAt: String
   createdBy: String
