@@ -7,10 +7,13 @@ exports.handler = async (event) => {
   try {
     switch (event.type) {
       case 'getOnePrivacyPolicy':
+        console.log(ObjectId(process.env.PRIVACYPOLICY_ID),"obj_id")
         return await PrivacyPolicy.findById(ObjectId(process.env.PRIVACYPOLICY_ID));
       
       case 'updateOnePrivacyPolicy':
+        console.log(ObjectId(process.env.PRIVACYPOLICY_ID),"obj_id")
         return await PrivacyPolicy.findByIdAndUpdate(
+
           ObjectId(process.env.PRIVACYPOLICY_ID),
           {
             ...event.arguments,
