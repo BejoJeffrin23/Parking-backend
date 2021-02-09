@@ -1,18 +1,19 @@
 const ObjectId = require('mongodb').ObjectID;
 const DB = require('../../utils/DB');
-const PrivacyPolicy = require('./utils/privacyPolicyModel');
+const Policy = require('./utils/policyModel');
 DB();
 
 exports.handler = async (event) => {
   try {
+    console.log(event)
     switch (event.type) {
-      case 'getOnePrivacyPolicy':
-        return await PrivacyPolicy.findById(ObjectId(process.env.PRIVACYPOLICY_ID));
+      case 'getOnePolicy':
+        return await Policy.findById(ObjectId(process.env.POLICY_ID));
       
-      case 'updateOnePrivacyPolicy':
-        return await PrivacyPolicy.findByIdAndUpdate(
+      case 'updateOnePolicy':
+        return await Policy.findByIdAndUpdate(
 
-          ObjectId(process.env.PRIVACYPOLICY_ID),
+          ObjectId(process.env.POLICY_ID),
           {
             ...event.arguments,
             details: event.arguments.details,

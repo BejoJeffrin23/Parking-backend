@@ -721,14 +721,14 @@
   field: updateOneUser
   request: user/mutation.updateOneUser.vtl
   response: response.vtl
-# PrivacyPolicy
-- dataSource: privacyPolicy
+# Policy
+- dataSource: policy
   type: Query
-  field: getOnePrivacyPolicy
-  request: privacyPolicy/query.getOnePrivacyPolicy.vtl
+  field: getOnePolicy
+  request: policy/query.getOnePolicy.vtl
   response: response.vtl
-- dataSource: privacyPolicy
+- dataSource: policy
   type: Mutation
-  field: updateOnePrivacyPolicy
-  request: privacyPolicy/mutation.updateOnePrivacyPolicy.vtl
+  field: updateOnePolicy
+  request: policy/mutation.updateOnePolicy.vtl
   response: response.vtl

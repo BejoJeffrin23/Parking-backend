@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
 
-const privacyPolicySchema = new mongoose.Schema({
+const policySchema = new mongoose.Schema({
   details :{
-    type: String
+    type: String, default: "sample data"
   },
   published: {
     type: Boolean,
@@ -19,6 +19,6 @@ const privacyPolicySchema = new mongoose.Schema({
   },
 });
 
-const PrivacyPolicy = mongoose.model("PrivacyPolicy", privacyPolicySchema);
+const Policy = mongoose.model("Policy", policySchema);
 
-module.exports = PrivacyPolicy;
+module.exports = Policy;

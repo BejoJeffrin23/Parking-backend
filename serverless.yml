@@ -40,7 +40,7 @@ provider:
     STRIPE_SECRET: ${ssm:/parkyourself/stripe/test/secret}
     USER_POOL_ID: ${ssm:/parkyourself/userpool}
     FEE_ID: ${ssm:/parkyourself/fee}
-    PRIVACYPOLICY_ID: ${ssm:/parkyourself/privacypolicy}
+    POLICY_ID: ${ssm:/parkyourself/policy}
     TAX_ACCOUNT: ${ssm:/parkyourself/tax/account}
     
 

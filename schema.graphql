@@ -22,7 +22,7 @@ type Query {
 
   getOneFee2: String
   getOneFee: Fee
-  getOnePrivacyPolicy: PrivacyPolicy
+  getOnePolicy: Policy
   getOneFormOption(id: ID!): FormOption
   getAllFormOptions: [FormOption]
   
@@ -200,7 +200,7 @@ type Mutation {
   deleteOneDemo(id: ID!, updatedBy: String!): Boolean
   createOneFee(fee: Int!, createdBy: String!): Fee
   updateOneFee(fee: Int!, updatedBy: String!): Fee
-  updateOnePrivacyPolicy(details: String!, updatedBy: String!): PrivacyPolicy
+  updateOnePolicy(details: String!, updatedBy: String!): Policy
   createOneFormOption(
     title: String!
     formName: String!
@@ -609,7 +609,7 @@ type Fee {
   published: Boolean
 }
 
-type PrivacyPolicy {
+type Policy {
   details: String
   createdAt: String
   updatedAt: String
