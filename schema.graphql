@@ -100,7 +100,6 @@ type Query {
   getAllFormSubs: [FormSub]
 
   getAllImages: [ImageUpload]
-  # getDemo: [Book]
   getAllEmails: [ScrapedEmail]
 
   getListing(id: ID!): Listing

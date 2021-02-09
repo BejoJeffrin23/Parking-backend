@@ -19,17 +19,17 @@ exports.handler = async (event) => {
           event.arguments.filter ? JSON.parse(event.arguments.filter) : {}
         );
       case 'getAllBookingsSearch':
-        let oneYearFromNow = new Date();
-        oneYearFromNow.setFullYear(oneYearFromNow.getFullYear() + 1);
-        let yearsBackFromNow = new Date();
-        yearsBackFromNow.setFullYear(yearsBackFromNow.getFullYear() - 100);
+        // let oneYearFromNow = new Date();
+        // oneYearFromNow.setFullYear(oneYearFromNow.getFullYear() + 1);
+        // let yearsBackFromNow = new Date();
+        // yearsBackFromNow.setFullYear(yearsBackFromNow.getFullYear() - 100);
         const {
           page = 1,
           limit = 10,
           status,
           search = '',
-          startDate = yearsBackFromNow,
-          endDate = oneYearFromNow,
+          startDate = null,
+          endDate = null,
           sortBy = 'startDate',
           username = null,
         } = event.arguments;
@@ -37,6 +37,26 @@ exports.handler = async (event) => {
         if (username !== null) {
           tempFilter.driverId = username;
         }
+
+        if (
+          status !== null &&
+          (status === 'upcoming' || status === 'current')
+        ) {
+          await Booking.updateMany(
+            { status: status, ...tempFilter },
+            { $set: { status: 'completed' } }
+          );
+        }
+
+        if (startDate !== null && endDate !== null) {
+          tempFilter.startDate = {
+            $gte: Date.parse(startDate),
+          };
+          tempFilter.endDate = {
+            $lte: Date.parse(endDate),
+          };
+        }
+
         const bookings = await Booking.find({
           ...tempFilter,
           status: status,

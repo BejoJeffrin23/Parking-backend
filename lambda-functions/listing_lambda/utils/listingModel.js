@@ -4,8 +4,8 @@ const Long = mongoose.Schema.Types.Long;
 
 const markerSchema = new mongoose.Schema({
   type: {
-    type: String, // Don't do `{ location: { type: String } }`
-    enum: ['Point'], // 'location.type' must be 'Point'
+    type: String,
+    enum: ['Point'],
     required: true,
   },
   coordinates: {
@@ -17,51 +17,40 @@ const markerSchema = new mongoose.Schema({
 const locationDetailsSchema = new mongoose.Schema({
   listingType: {
     type: String,
-    // required: true,
   },
   propertyType: {
     type: String,
-    // required: true,
   },
 
   propertyName: {
     type: String,
-    // required: true,
   },
   country: {
     type: String,
-    // required: true,
   },
   address: {
     type: String,
-    // required: true,
   },
   unitNum: {
     type: Number,
   },
   city: {
     type: String,
-    // required: true,
   },
   state: {
     type: String,
-    // required: true,
   },
   postalCode: {
     type: String,
-    // required: true,
   },
   code: {
     type: String,
-    // required: true,
   },
   phone: {
     type: String,
-    // required: true,
   },
   marker: {
     type: markerSchema,
-    // required: true,
   },
   streetViewImages: [String],
   parkingEntranceImages: [String],
@@ -87,7 +76,6 @@ const spaceLabelSchema = new mongoose.Schema({
 const heightSchema = new mongoose.Schema({
   value: {
     type: Number,
-    // required: true,
   },
   unit: {
     type: String,
@@ -98,11 +86,9 @@ const heightSchema = new mongoose.Schema({
 const spaceDetailsSchema = new mongoose.Schema({
   parkingSpaceType: {
     type: String,
-    // required: true,
   },
   qtyOfSpaces: {
     type: String,
-    // required: true,
   },
   heightRestriction: {
     type: Boolean,
@@ -162,18 +148,15 @@ const spaceDetailsSchema = new mongoose.Schema({
   spaceLabels: [spaceLabelSchema],
   aboutSpace: {
     type: String,
-    // required: true,
   },
   accessInstructions: {
     type: String,
-    // required: true,
   },
 });
 
 const timeDurationSchema = new mongoose.Schema({
   value: {
     type: Long,
-    // required: true,
   },
   unit: {
     type: String,
@@ -240,7 +223,6 @@ const spaceAvailableSchema = new mongoose.Schema({
   },
   scheduleType: {
     type: String,
-    // required: true,
   },
   customTimeRange: [customTimeSchema],
   hasNoticeTime: {
@@ -272,26 +254,21 @@ const spaceAvailableSchema = new mongoose.Schema({
 const pricingRatesSchema = new mongoose.Schema({
   perHourRate: {
     type: Number,
-    // required: true,
   },
   perDayRate: {
     type: Number,
-    // required: true,
   },
   perWeekRate: {
     type: Number,
-    // required: true,
   },
   perMonthRate: {
     type: Number,
-    // required: true,
   },
 });
 
 const pricingDetailsSchema = new mongoose.Schema({
   pricingType: {
     type: String,
-    // required: true,
   },
   pricingRates: {
     type: pricingRatesSchema,
