@@ -38,13 +38,10 @@ exports.handler = async (event) => {
           tempFilter.driverId = username;
         }
 
-        if (
-          status !== null &&
-          (status === 'upcoming' || status === 'current')
-        ) {
+        if (status !== null && status === 'upcoming') {
           await Booking.updateMany(
             {
-              endDate: { $lte: Date.parse(new Date()) },
+              endDate: { $lt: Date.parse(new Date()) },
               status: status,
               ...tempFilter,
             },
