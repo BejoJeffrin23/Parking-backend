@@ -9,7 +9,11 @@ exports.handler = async (event) => {
     switch (event.type) {
       case 'getOnePolicy':
         return await Policy.findById(ObjectId(process.env.POLICY_ID));
-      
+      case 'createOnePolicy':
+        return await Policy.create({
+          ...event.arguments,
+          details: event.arguments.details,
+        });
       case 'updateOnePolicy':
         return await Policy.findByIdAndUpdate(
 

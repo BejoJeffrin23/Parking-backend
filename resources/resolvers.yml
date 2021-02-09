@@ -727,6 +727,11 @@
   field: getOnePolicy
   request: policy/query.getOnePolicy.vtl
   response: response.vtl
+  - dataSource: policy
+  type: Mutation
+  field: createOnePolicy
+  request: policy/mutation.createOnePolicy.vtl
+  response: response.vtl
 - dataSource: policy
   type: Mutation
   field: updateOnePolicy

@@ -200,6 +200,7 @@ type Mutation {
   deleteOneDemo(id: ID!, updatedBy: String!): Boolean
   createOneFee(fee: Int!, createdBy: String!): Fee
   updateOneFee(fee: Int!, updatedBy: String!): Fee
+  createOnePolicy(details: String!, createdBy: String!): Policy
   updateOnePolicy(details: String!, updatedBy: String!): Policy
   createOneFormOption(
     title: String!
