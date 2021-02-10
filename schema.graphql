@@ -136,7 +136,9 @@ type Query {
     startDate: String
     endDate: String
     sortBy: String
-    username: String
+    driverId: String
+    ownerId: String
+    listingId: String
   ): BookingSearch
   getBookingsWithListingId(listingId: String!): [Booking]
   getBookingsWithOwnerId(ownerId: String!): [Booking]

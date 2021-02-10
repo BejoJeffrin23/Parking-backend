@@ -31,11 +31,19 @@ exports.handler = async (event) => {
           startDate = null,
           endDate = null,
           sortBy = 'startDate',
-          username = null,
+          driverId = null,
+          ownerId = null,
+          listingId = null,
         } = event.arguments;
 
-        if (username !== null) {
-          tempFilter.driverId = username;
+        if (driverId !== null) {
+          tempFilter.driverId = driverId;
+        }
+        if (ownerId !== null) {
+          tempFilter.ownerId = ownerId;
+        }
+        if (listingId !== null) {
+          tempFilter.listingId = listingId;
         }
 
         if (status !== null && status === 'upcoming') {
@@ -61,8 +69,6 @@ exports.handler = async (event) => {
         const bookings = await Booking.find({
           ...tempFilter,
           status: status,
-          startDate: { $gte: Date.parse(startDate) },
-          endDate: { $lte: Date.parse(endDate) },
           $or: [
             {
               address: { $regex: search, $options: 'i' },
@@ -89,8 +95,6 @@ exports.handler = async (event) => {
         const bookingsCount = await Booking.countDocuments({
           ...tempFilter,
           status: status,
-          startDate: { $gte: Date.parse(startDate) },
-          endDate: { $lte: Date.parse(endDate) },
           $or: [
             {
               address: { $regex: search, $options: 'i' },
