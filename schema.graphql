@@ -562,12 +562,6 @@ type Subscription {
     @aws_subscribe(mutations: ["updateBookingStatus"])
   bookingSub(driverId: String, ownerId: String, listingId: String): Booking
     @aws_subscribe(mutations: ["createBooking", "updateBookingStatus"])
-  driverBookingSub(driverId: String): Booking
-    @aws_subscribe(mutations: ["createBooking", "updateBookingStatus"])
-  ownerOrderSub(ownerId: String): Booking
-    @aws_subscribe(mutations: ["createBooking", "updateBookingStatus"])
-  listingOrderSub(listingId: String): Booking
-    @aws_subscribe(mutations: ["createBooking", "updateBookingStatus"])
 }
 
 type UserSearch {
