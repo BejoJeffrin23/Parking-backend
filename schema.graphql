@@ -21,6 +21,7 @@ type Query {
   getOneDemo(id: ID!): Demo
 
   getOneFee: Fee
+  getOnePolicy: Policy
   getOneFormOption(id: ID!): FormOption
   getAllFormOptions(filter: String): [FormOption]
 
@@ -198,6 +199,8 @@ type Mutation {
   updateOneDemo(id: ID!, name: String, phone: Int, updatedBy: String!): Demo
   deleteOneDemo(id: ID!, updatedBy: String!): Boolean
   updateOneFee(fee: Int!, updatedBy: String!): Fee
+  createOnePolicy(details: String!, createdBy: String!): Policy
+  updateOnePolicy(details: String!, updatedBy: String!): Policy
   createOneFormOption(
     title: String!
     formName: String!
@@ -601,6 +604,15 @@ type Demo {
 type Fee {
   fee: Int
   decimal: Float
+  createdAt: String
+  updatedAt: String
+  createdBy: String
+  updatedBy: String
+  published: Boolean
+}
+
+type Policy {
+  details: String
   createdAt: String
   updatedAt: String
   createdBy: String

@@ -700,3 +700,19 @@
   field: updateOneUser
   request: user/mutation.updateOneUser.vtl
   response: response.vtl
+# Policy
+- dataSource: policy
+  type: Query
+  field: getOnePolicy
+  request: policy/query.getOnePolicy.vtl
+  response: response.vtl
+- dataSource: policy
+  type: Mutation
+  field: createOnePolicy
+  request: policy/mutation.createOnePolicy.vtl
+  response: response.vtl
+- dataSource: policy
+  type: Mutation
+  field: updateOnePolicy
+  request: policy/mutation.updateOnePolicy.vtl
+  response: response.vtl
