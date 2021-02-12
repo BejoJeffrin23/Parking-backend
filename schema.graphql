@@ -1,6 +1,8 @@
 scalar Long
 
 type Query {
+  getAllMessages(user1Id: String, user2Id: String): [Message2]
+  getInbox(userId: String): [Inbox]
   getAllUsers(filter: String): [User]
   getAllUsersSearch(
     page: Int
@@ -182,6 +184,15 @@ type Query {
 }
 
 type Mutation {
+  sendOneMessage(
+    listingLocation: String!
+    senderId: String!
+    senderName: String!
+    receiverId: String!
+    receiverName: String!
+    message: String!
+  ): Message2
+
   toggleOneUserStatus(
     username: String!
     updatedBy: String!
@@ -565,6 +576,24 @@ type Subscription {
     @aws_subscribe(mutations: ["updateBookingStatus"])
   bookingSub(driverId: String, ownerId: String, listingId: String): Booking
     @aws_subscribe(mutations: ["createBooking", "updateBookingStatus"])
+  newMessageSub(receiverId: String, senderId: String): Message2
+    @aws_subscribe(mutations: ["sendOneMessage"])
+}
+
+type Inbox {
+  _id: String
+  lastMessage: Message2
+}
+
+type Message2 {
+  _id: ID
+  listingLocation: String
+  senderId: String
+  senderName: String
+  receiverId: String
+  receiverName: String
+  message: String
+  createdAt: AWSDateTime
 }
 
 type UserSearch {

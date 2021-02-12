@@ -338,6 +338,22 @@
   field: createMessage
   request: message/mutation.createMessage.vtl
   response: response.vtl
+#Message2
+- dataSource: message
+  type: Mutation
+  field: sendOneMessage
+  request: message/mutation.sendOneMessage.vtl
+  response: response.vtl
+- dataSource: message
+  type: Query
+  field: getInbox
+  request: message/query.getInbox.vtl
+  response: response.vtl
+- dataSource: message
+  type: Query
+  field: getAllMessages
+  request: message/query.getAllMessages.vtl
+  response: response.vtl
 #Common
 - dataSource: common
   type: Query
