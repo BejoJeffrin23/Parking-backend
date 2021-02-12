@@ -79,7 +79,7 @@ exports.handler = async (event) => {
           .skip((page - 1) * limit)
           .sort(sortBy)
           .exec();
-        count = await User.countDocuments({
+        count = await Message2.countDocuments({
           $or: [
             {
               senderId: user1Id,
