@@ -8,6 +8,8 @@ exports.handler = async (event) => {
     let userId = null;
     let user1Id = null;
     let user2Id = null;
+    let messages = [];
+    let count = 0;
     switch (event.type) {
       case 'getInbox':
         userId = event.arguments.userId;
@@ -58,9 +60,26 @@ exports.handler = async (event) => {
       case 'sendOneMessage':
         return await Message2.create(event.arguments);
       case 'getAllMessages':
+        const { page = 1, limit = 20, sortBy = '-createdAt' } = event.arguments;
         user1Id = event.arguments.user1Id;
         user2Id = event.arguments.user2Id;
-        return await Message2.find({
+        messages = await Message2.find({
+          $or: [
+            {
+              senderId: user1Id,
+              receiverId: user2Id,
+            },
+            {
+              senderId: user2Id,
+              receiverId: user1Id,
+            },
+          ],
+        })
+          .limit(limit * 1)
+          .skip((page - 1) * limit)
+          .sort(sortBy)
+          .exec();
+        count = await User.countDocuments({
           $or: [
             {
               senderId: user1Id,
@@ -72,6 +91,7 @@ exports.handler = async (event) => {
             },
           ],
         });
+        return { messages, count };
       case 'getDistinctListingsFromMessages':
         return await Message.distinct('listingId');
       case 'getDriverOwnerMessagesByListingId':

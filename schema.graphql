@@ -1,7 +1,12 @@
 scalar Long
 
 type Query {
-  getAllMessages(user1Id: String, user2Id: String): [Message2]
+  getAllMessages(
+    user1Id: String!
+    user2Id: String!
+    count: Int
+    page: Int
+  ): AllMessages
   getInbox(userId: String): [Inbox]
   getAllUsers(filter: String): [User]
   getAllUsersSearch(
@@ -583,6 +588,11 @@ type Subscription {
 type Inbox {
   _id: String
   lastMessage: Message2
+}
+
+type AllMessages {
+  count: Int!
+  messages: [Message2]
 }
 
 type Message2 {
