@@ -1,6 +1,7 @@
 const DB = require('../../utils/DB');
 const Message = require('./utils/messageModel');
 const Message2 = require('./utils/messageModel2');
+const Listing = require('../listing_lambda/utils/listingModel');
 DB();
 
 exports.handler = async (event) => {
@@ -11,6 +12,31 @@ exports.handler = async (event) => {
     let messages = [];
     let count = 0;
     switch (event.type) {
+      case 'getSpaceOwnerInbox':
+        return await Listing.aggregate([
+          {
+            $match: {
+              ownerId,
+            },
+          },
+          { $addFields: { listingId: { $toString: '$_id' } } },
+          {
+            $lookup: {
+              from: 'message2',
+              localField: 'listingId',
+              foreignField: 'receiverId',
+              as: 'messages',
+            },
+          },
+          {
+            $project: {
+              item: 1,
+              listingAddress: '$locationDetails.address',
+              messageCount: { $size: '$messages' },
+            },
+          },
+          { $match: { messageCount: { $gte: 1 } } },
+        ]);
       case 'getInbox':
         userId = event.arguments.userId;
         return await Message2.aggregate([

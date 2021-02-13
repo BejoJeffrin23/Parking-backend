@@ -8,6 +8,7 @@ type Query {
     page: Int
   ): AllMessages
   getInbox(userId: String): [Inbox]
+  getOwnerInbox(userId: String): [OwnerInbox]
   getAllUsers(filter: String): [User]
   getAllUsersSearch(
     page: Int
@@ -588,6 +589,12 @@ type Subscription {
 type Inbox {
   _id: String
   lastMessage: Message2
+}
+
+type OwnerInbox {
+  _id: String
+  listingAddress: String
+  messageCount: Int!
 }
 
 type AllMessages {
