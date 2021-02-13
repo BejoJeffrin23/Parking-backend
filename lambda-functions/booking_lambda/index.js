@@ -46,7 +46,10 @@ exports.handler = async (event) => {
           tempFilter.listingId = listingId;
         }
 
-        if (status !== null && status === 'upcoming') {
+        if (
+          status !== null &&
+          (status === 'upcoming' || status === 'upcoming')
+        ) {
           await Booking.updateMany(
             {
               endDate: { $lt: Date.parse(new Date()) },
