@@ -12,7 +12,7 @@ exports.handler = async (event) => {
     let messages = [];
     let count = 0;
     switch (event.type) {
-      case 'getSpaceOwnerInbox':
+      case 'getOwnerInbox':
         const ownerId = event.arguments.ownerId;
         return await Listing.aggregate([
           {
