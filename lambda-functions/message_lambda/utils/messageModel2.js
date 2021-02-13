@@ -17,10 +17,6 @@ const message2Schema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  receiverName: {
-    type: String,
-    required: true,
-  },
   message: {
     type: String,
     required: true,
