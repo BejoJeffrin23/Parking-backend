@@ -4,7 +4,7 @@ type Query {
   getAllMessages(
     user1Id: String!
     user2Id: String!
-    count: Int
+    limit: Int
     page: Int
   ): AllMessages
   getInbox(userId: String!): [Inbox]
