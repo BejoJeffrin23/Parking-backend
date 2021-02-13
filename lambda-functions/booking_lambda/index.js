@@ -48,7 +48,7 @@ exports.handler = async (event) => {
 
         if (
           status !== null &&
-          (status === 'upcoming' || status === 'upcoming')
+          (status === 'upcoming' || status === 'current')
         ) {
           await Booking.updateMany(
             {
