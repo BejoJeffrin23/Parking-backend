@@ -351,6 +351,11 @@
   response: response.vtl
 - dataSource: message
   type: Query
+  field: getOwnerInbox
+  request: message/query.getOwnerInbox.vtl
+  response: response.vtl
+- dataSource: message
+  type: Query
   field: getAllMessages
   request: message/query.getAllMessages.vtl
   response: response.vtl

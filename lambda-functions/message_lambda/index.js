@@ -13,6 +13,7 @@ exports.handler = async (event) => {
     let count = 0;
     switch (event.type) {
       case 'getSpaceOwnerInbox':
+        const ownerId = event.arguments.ownerId;
         return await Listing.aggregate([
           {
             $match: {

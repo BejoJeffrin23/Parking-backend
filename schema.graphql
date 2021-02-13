@@ -7,8 +7,8 @@ type Query {
     count: Int
     page: Int
   ): AllMessages
-  getInbox(userId: String): [Inbox]
-  getOwnerInbox(userId: String): [OwnerInbox]
+  getInbox(userId: String!): [Inbox]
+  getOwnerInbox(ownerId: String!): [OwnerInbox]
   getAllUsers(filter: String): [User]
   getAllUsersSearch(
     page: Int
