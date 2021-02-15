@@ -582,6 +582,8 @@ type Subscription {
     @aws_subscribe(mutations: ["updateBookingStatus"])
   bookingSub(driverId: String, ownerId: String, listingId: String): Booking
     @aws_subscribe(mutations: ["createBooking", "updateBookingStatus"])
+  newBookingSub(driverId: String, ownerId: String, listingId: String): Booking
+    @aws_subscribe(mutations: ["createBooking"])
   newMessageSub(receiverId: String, senderId: String): Message2
     @aws_subscribe(mutations: ["sendOneMessage"])
 }
