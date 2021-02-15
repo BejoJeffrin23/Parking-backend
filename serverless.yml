@@ -10,7 +10,7 @@ provider:
   runtime: nodejs12.x
   timeout: 10
   stage: ${opt:stage, 'local'}
-  role: 'arn:aws:iam::865286859051:role/backend-lambda-role'
+  role: 'arn:aws:iam::784380094623:role/backend-lambda-role'
 
   environment:
     SENDER_EMAIL: ${ssm:/parkyourself/sender/email}
