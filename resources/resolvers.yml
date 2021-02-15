@@ -569,6 +569,11 @@
 # FAQ
 - dataSource: faq
   type: Query
+  field: getAllFaqTopics
+  request: faq/query.getAllFaqTopics.vtl
+  response: response.vtl
+- dataSource: faq
+  type: Query
   field: getFaq
   request: faq/query.getFaq.vtl
   response: response.vtl

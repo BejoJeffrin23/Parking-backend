@@ -187,6 +187,7 @@ type Query {
   getAllFaqs: [Faq]
   getFaqsByRole(role: String!): [Faq]
   getFaqsByTopic(topic: String!): [Faq]
+  getAllFaqTopics(topic: String!): [FaqTopic]
 }
 
 type Mutation {
@@ -1196,6 +1197,11 @@ type Faq {
   question: String
   answer: String
   createdAt: String
+}
+
+type FaqTopic {
+  _id: ID
+  topic: String
 }
 
 schema {
