@@ -187,7 +187,7 @@ type Query {
   getAllFaqs: [Faq]
   getFaqsByRole(role: String!): [Faq]
   getFaqsByTopic(topic: String!): [Faq]
-  getAllFaqTopics(): [FaqTopic]
+  getAllFaqTopics: [FaqTopic]
 }
 
 type Mutation {
