@@ -17,10 +17,27 @@ exports.handler = (event, context, callback) => {
     // ExternalProvider (ie. Social)
     if (event.request.userAttributes.hasOwnProperty('email')) {
       // Create Native User Always
+      const email = event.request.userAttributes.email;
+      const name = event.request.userAttributes.name;
+      const picture = event.request.userAttributes.picture;
       var params = {
         ClientId: backendClientIds[event.userPoolId],
         Password: generatePassword(),
         Username: event.request.userAttributes.email,
+        UserAttributes: [
+          {
+            Name: 'email',
+            Value: email,
+          },
+          {
+            Name: 'name',
+            Value: name,
+          },
+          {
+            Name: 'picture',
+            Value: picture,
+          },
+        ],
       };
       cognito.signUp(params, function (err, data) {
         if (err) {
@@ -86,9 +103,14 @@ function getUsersAndLink(userPoolId, email, event) {
 
 function linkUser(userName, event) {
   var destinationValue = userName;
-  var sourceValue = event.userName.split('_')[1];
+  const username = event.userName;
+  let [providerName, providerUserId] = username.split('_');
+  providerName = ['Google', 'Facebook'].find(
+    (val) => providerName.toUpperCase() === val.toUpperCase()
+  );
+  // var sourceValue = event.userName.split('_')[1];
   console.log('destinationValue: ' + destinationValue);
-  console.log('sourceValue: ' + sourceValue);
+  console.log('sourceValue: ' + providerUserId);
   // Email Found and CONFIRMED (not EXTERNAL_PROVIDER)
   var params = {
     DestinationUser: {
@@ -97,8 +119,8 @@ function linkUser(userName, event) {
     },
     SourceUser: {
       ProviderAttributeName: 'Cognito_Subject',
-      ProviderAttributeValue: sourceValue,
-      ProviderName: event.userName.split('_')[0],
+      ProviderAttributeValue: providerUserId,
+      ProviderName: providerName,
     },
     UserPoolId: event.userPoolId,
   };
