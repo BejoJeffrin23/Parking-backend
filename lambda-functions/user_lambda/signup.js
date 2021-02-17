@@ -9,16 +9,16 @@ exports.handler = async (event) => {
       console.log('Pre Sign up Event', event);
       let existingUser = null;
       const userPoolId = event.userPoolId;
+      const username = event.userName;
       const email = event.request.userAttributes.email;
       const name = event.request.userAttributes.name;
       const picture = event.request.userAttributes.picture;
-      const username = event.userName;
       if (event.triggerSource == 'PreSignUp_ExternalProvider') {
         let [providerName, providerUserId] = username.split('_');
         providerName = ['Google', 'Facebook'].find(
           (val) => providerName.toUpperCase() === val.toUpperCase()
         );
-        existingUser = await cognito.listUsers({
+        existingUser = await Cognito.listUsers({
           userPoolId,
           email,
         });
@@ -33,7 +33,7 @@ exports.handler = async (event) => {
             providerUserId,
           });
         } else {
-          return await cognito.adminCreateNativeUserAndLink({
+          return await Cognito.adminCreateNativeUserAndLink({
             name,
             email,
             picture,
@@ -42,13 +42,15 @@ exports.handler = async (event) => {
           });
         }
       } else {
-        await User.create({
-          username,
-          name,
-          email,
-          picture,
-          createdBy: event.triggerSource,
-        });
+        // Also create stripe user here
+
+        // await User.create({
+        //   username,
+        //   name,
+        //   email,
+        //   picture,
+        //   createdBy: event.triggerSource,
+        // });
         return event;
       }
     }
