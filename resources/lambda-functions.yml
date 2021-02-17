@@ -48,5 +48,7 @@ user_lambda:
   handler: lambda-functions/user_lambda/index.handler
 signup_lambda:
   handler: lambda-functions/user_lambda/signup.handler
+postConfirmation_lambda:
+  handler: lambda-functions/user_lambda/postConfirmation.handler
 policy_lambda:
   handler: lambda-functions/policy_lambda/index.handler
