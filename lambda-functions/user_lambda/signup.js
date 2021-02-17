@@ -7,6 +7,10 @@ exports.handler = async (event) => {
   try {
     if (event.triggerSource) {
       console.log('Pre Sign up Event', event);
+      if (event.userName.includes('acebook')) {
+        event.request.userAttributes.picture =
+          event.request.userAttributes.picture.data.url;
+      }
       let existingUser = null;
       const userPoolId = event.userPoolId;
       const username = event.userName;
@@ -14,6 +18,8 @@ exports.handler = async (event) => {
       const name = event.request.userAttributes.name;
       const picture = event.request.userAttributes.picture;
       if (event.triggerSource == 'PreSignUp_ExternalProvider') {
+        event.response.autoVerifyEmail = true;
+        // event.request.userAttributes.email
         let [providerName, providerUserId] = username.split('_');
         providerName = ['Google', 'Facebook'].find(
           (val) => providerName.toUpperCase() === val.toUpperCase()
