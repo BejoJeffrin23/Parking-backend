@@ -27,6 +27,7 @@ exports.handler = async (event) => {
         await cognito.adminUpdateUserAttributes({
           name: 'custom:role',
           value: event.arguments.role,
+          username: event.arguments.username,
         });
         // Send Email to driver and space owner
         const tempData = {
