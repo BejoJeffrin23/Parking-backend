@@ -22,7 +22,10 @@ exports.handler = async (event) => {
           existingUser.Users &&
           existingUser.Users.length > 0
         ) {
-          const [providerName, providerUserId] = event.userName.split('_');
+          let [providerName, providerUserId] = event.userName.split('_');
+          providerName = ['Google', 'Facebook'].find(
+            (val) => providerName.toUpperCase() === val.toUpperCase()
+          );
           await cognito.linkProviderToUser({
             username: existingUser.Users[0].Username,
             providerName,
