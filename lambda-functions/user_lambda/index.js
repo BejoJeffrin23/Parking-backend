@@ -28,7 +28,11 @@ exports.handler = async (event) => {
 
       if (!userFlag) {
         if (event.triggerSource == 'PreSignUp_ExternalProvider') {
-          let [providerName, providerUserId] = event.userName.split('_');
+          // let [providerName, providerUserId] = event.userName.split('_');
+          let [providerName, providerUserId] = username.split('_');
+          providerName = ['Google', 'Facebook'].find(
+            (val) => providerName.toUpperCase() === val.toUpperCase()
+          );
           let tempUsername = await cognito.adminCreateNativeUserAndLink({
             name: event.request.userAttributes.name,
             email: event.request.userAttributes.email,
@@ -62,7 +66,11 @@ exports.handler = async (event) => {
         event.triggerSource == 'PreSignUp_ExternalProvider'
       ) {
         // Link User
-        let [providerName, providerUserId] = event.userName.split('_');
+        // let [providerName, providerUserId] = event.userName.split('_');
+        let [providerName, providerUserId] = username.split('_');
+        providerName = ['Google', 'Facebook'].find(
+          (val) => providerName.toUpperCase() === val.toUpperCase()
+        );
         await cognito.linkProviderToUser({
           username: tempCognitoUser.Users[0].Username,
           providerName,
