@@ -20,6 +20,7 @@ exports.handler = async (event) => {
       tempCognitoUser = await cognito.listUsers({
         email: event.request.userAttributes.email,
       });
+      const username = event.userName;
       userFlag =
         tempCognitoUser &&
         tempCognitoUser.Users &&
