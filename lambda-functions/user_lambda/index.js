@@ -25,6 +25,7 @@ exports.handler = async (event) => {
         tempCognitoUser.Users &&
         tempCognitoUser.Users[0] &&
         tempCognitoUser.Users[0].Username;
+
       if (!userFlag) {
         if (event.triggerSource == 'PreSignUp_ExternalProvider') {
           let [providerName, providerUserId] = event.userName.split('_');
