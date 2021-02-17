@@ -1,107 +1,134 @@
-const { CognitoIdentityServiceProvider } = require('aws-sdk');
+const AWS = require('aws-sdk');
+const cognito = new AWS.CognitoIdentityServiceProvider({
+  apiVersion: '2016-04-18',
+});
+// BackendClientIds
+// These are needed because JS can't use a app client with a client secret
+var backendClientIds = {
+  // TO DO: USERPOOLID : BACKENDCLIENTID
+  'us-east-1_WvwYKuosP': '3c8ci3us1b1p6aotrmsubcrmn2',
+};
 
-const handler = async (event) => {
-  try {
-    const userPoolId = event.userPoolId;
-    const trigger = event.triggerSource;
-    const email = event.request.userAttributes.email;
-    const name = event.request.userAttributes.name;
-    const picture = event.request.userAttributes.picture;
-    const emailVerified = event.request.userAttributes.email_verified;
-    const identity = event.userName;
-    const client = new CognitoIdentityServiceProvider();
-
-    if (trigger === 'PreSignUp_ExternalProvider') {
-      await client
-        .listUsers({
-          UserPoolId: userPoolId,
-          AttributesToGet: ['email', 'picture', 'name'],
-          Filter: `email = "${email}"`,
-        })
-        .promise()
-        .then(({ Users }) =>
-          Users.sort((a, b) => (a.UserCreateDate > b.UserCreateDate ? 1 : -1))
-        )
-        .then((users) => (users.length > 0 ? users[0] : null))
-        .then(async (user) => {
-          // user with username password already exists, do nothing
-          if (user) {
-            return user;
+// NOTE: This is not site specific; however, at this time it is only set to work with Facebook
+exports.handler = (event, context, callback) => {
+  console.log('exports.handler - event:');
+  console.log(event);
+  if (event.triggerSource.includes('ExternalProvider')) {
+    // ExternalProvider (ie. Social)
+    if (event.request.userAttributes.hasOwnProperty('email')) {
+      // Create Native User Always
+      var params = {
+        ClientId: backendClientIds[event.userPoolId],
+        Password: generatePassword(),
+        Username: event.request.userAttributes.email,
+      };
+      cognito.signUp(params, function (err, data) {
+        if (err) {
+          console.log('cognito.signUp:');
+          console.log(err, err.stack);
+          if (err.code === 'UsernameExistsException') {
+            // Get and Link Existing User
+            getUsersAndLink(
+              event.userPoolId,
+              event.request.userAttributes.email,
+              event
+            );
           }
-
-          // user with username password does not exists, create one
-          const newUser = await client
-            .adminCreateUser({
-              UserPoolId: userPoolId,
-              Username: email,
-              MessageAction: 'SUPPRESS', // dont send email to user
-              UserAttributes: [
-                {
-                  Name: 'name',
-                  Value: name,
-                },
-                {
-                  Name: 'picture',
-                  Value: picture,
-                },
-                {
-                  Name: 'email',
-                  Value: email,
-                },
-                {
-                  Name: 'email_verified',
-                  Value: emailVerified,
-                },
-              ],
-            })
-            .promise();
-          // gotta set the password, else user wont be able to reset it
-          await client
-            .adminSetUserPassword({
-              UserPoolId: userPoolId,
-              Username: newUser.Username,
-              Password: '<generate random password>',
-              Permanent: true,
-            })
-            .promise();
-
-          return newUser.Username;
-        })
-        .then((username) => {
-          // link external user to cognito user
-          const split = identity.split('_');
-          const providerValue = split.length > 1 ? split[1] : null;
-          const provider = ['Google', 'Facebook'].find(
-            (val) => split[0].toUpperCase() === val.toUpperCase()
-          );
-
-          if (!provider || !providerValue) {
-            return Promise.reject(new Error('Invalid external user'));
+        } else {
+          console.log('cognito.signUp:');
+          console.log(data);
+          if (data.UserConfirmed) {
+            // Link Newly Created User
+            linkUser(data.UserSub, event);
           }
-
-          return client
-            .adminLinkProviderForUser({
-              UserPoolId: userPoolId,
-              DestinationUser: {
-                ProviderName: 'Cognito',
-                ProviderAttributeValue: username,
-              },
-              SourceUser: {
-                ProviderName: provider,
-                ProviderAttributeName: 'Cognito_Subject',
-                ProviderAttributeValue: providerValue,
-              },
-            })
-            .promise();
-        });
+        }
+      });
     }
-    return event;
-  } catch (error) {
-    console.log('Error', error);
-    throw error;
+  } else {
+    // All Others (ie. Native Accounts)
+    // Auto Confirm The User
+    event.response.autoConfirmUser = true;
+    // Set the email as verified if it is in the request
+    if (event.request.userAttributes.hasOwnProperty('email')) {
+      event.response.autoVerifyEmail = true;
+    }
   }
+  // Return to Amazon Cognito
+  callback(null, event);
 };
 
-module.exports = {
-  handler,
-};
+function generatePassword() {
+  return (
+    Math.random().toString(36).slice(2) +
+    Math.random().toString(36).toUpperCase().slice(2)
+  );
+  // TO DO: Code returns a string of a random generated password
+  // NOTE: We do a 20+ character password random generated by a bulk list of characters
+}
+
+function getUsersAndLink(userPoolId, email, event) {
+  var params = {
+    UserPoolId: userPoolId,
+    AttributesToGet: ['sub', 'email', 'cognito:user_status'],
+    Filter: 'email = "' + email + '"',
+  };
+  cognito.listUsers(params, (err, data) => {
+    if (err) {
+      console.log('getUsersAndLink - err - cognito.listUsers:');
+      console.log(err, err.stack);
+    } else {
+      console.log('getUsersAndLink - cognito.listUsers:');
+      console.log(data);
+      linkUsers(data, event);
+    }
+  });
+}
+
+function linkUser(userName, event) {
+  var destinationValue = userName;
+  var sourceValue = event.userName.split('_')[1];
+  console.log('destinationValue: ' + destinationValue);
+  console.log('sourceValue: ' + sourceValue);
+  // Email Found and CONFIRMED (not EXTERNAL_PROVIDER)
+  var params = {
+    DestinationUser: {
+      ProviderAttributeValue: destinationValue,
+      ProviderName: 'Cognito',
+    },
+    SourceUser: {
+      ProviderAttributeName: 'Cognito_Subject',
+      ProviderAttributeValue: sourceValue,
+      ProviderName: event.userName.split('_')[0],
+    },
+    UserPoolId: event.userPoolId,
+  };
+  cognito.adminLinkProviderForUser(params, function (err, data) {
+    if (err) {
+      console.log('linkUser - err - cognito.adminLinkProviderForUser:');
+      console.log(err, err.stack);
+    } else {
+      console.log('linkUser - cognito.adminLinkProviderForUser:');
+      console.log(data);
+    }
+  });
+}
+
+function linkUsers(usersData, event) {
+  if (
+    usersData != null &&
+    usersData.Users != null &&
+    usersData.Users.length > 0
+  ) {
+    for (var i = 0; i < usersData.Users.length; i++) {
+      if (usersData.Users[i] != null) {
+        var destinationValue = '';
+        var sourceValue = '';
+        if (usersData.Users[i].UserStatus === 'CONFIRMED') {
+          linkUser(usersData.Users[i].Username, event);
+        }
+      }
+    }
+  } else {
+    console.log('linkUsers: UserData was NULL or Empty');
+  }
+}
