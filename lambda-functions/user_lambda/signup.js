@@ -49,7 +49,7 @@ const handler = async (event) => {
               },
               {
                 Name: 'email_verified',
-                Value: true,
+                Value: 'true',
               },
             ],
           })
