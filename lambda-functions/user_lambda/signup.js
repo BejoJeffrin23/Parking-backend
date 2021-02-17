@@ -1,76 +1,104 @@
-const DB = require('../../utils/DB');
-const User = require('./utils/userModel');
-const Cognito = require('../common_lambda/utils/Cognito');
-DB();
+const {
+  CognitoIdentityServiceProvider
+} = require('aws-sdk');
 
-exports.handler = async (event) => {
+
+const handler = async event => {
   try {
-    if (event.triggerSource) {
-      console.log('Pre Sign up Event', event);
-      if (
-        event.triggerSource == 'PreSignUp_ExternalProvider' ||
-        event.triggerSource == 'PreSignUp_AdminCreateUser'
-      ) {
-        event.response.autoConfirmUser = true;
-        event.response.autoVerifyEmail = true;
-        event.request.userAttributes.email_verified = 'true';
-      }
-      if (event.userName.includes('acebook')) {
-        event.request.userAttributes.picture =
-          event.request.userAttributes.picture.data.url;
-      }
-      let existingUser = null;
-      const userPoolId = event.userPoolId;
-      const username = event.userName;
-      const email = event.request.userAttributes.email;
-      const name = event.request.userAttributes.name;
-      const picture = event.request.userAttributes.picture;
-      if (event.triggerSource == 'PreSignUp_ExternalProvider') {
-        // event.response.autoConfirmUser = true;
-        // event.response.autoVerifyEmail = true;
-        // event.request.userAttributes.email_verified = 'true';
-        let [providerName, providerUserId] = username.split('_');
-        providerName = ['Google', 'Facebook'].find(
-          (val) => providerName.toUpperCase() === val.toUpperCase()
-        );
-        existingUser = await Cognito.listUsers({
-          userPoolId,
-          email,
-        });
-        if (
-          existingUser &&
-          existingUser.Users &&
-          existingUser.Users.length > 0
-        ) {
-          return await Cognito.linkProviderToUser({
-            username: existingUser.Users[0].Username,
-            providerName,
-            providerUserId,
-          });
-        } else {
-          return await Cognito.adminCreateNativeUserAndLink({
-            name,
-            email,
-            picture,
-            providerName,
-            providerUserId,
-          });
-        }
-      } else {
-        // Also create stripe user here
+  const userPoolId = event.userPoolId;
+  const trigger = event.triggerSource;
+  const email = event.request.userAttributes.email;
+  const name = event.request.userAttributes.name;
+  const picture = event.request.userAttributes.picture;
+  const emailVerified = event.request.userAttributes.email_verified;
+  const identity = event.userName;
+  const client = new CognitoIdentityServiceProvider();
 
-        // await User.create({
-        //   username,
-        //   name,
-        //   email,
-        //   picture,
-        //   createdBy: event.triggerSource,
-        // });
-        return event;
-      }
-    }
-  } catch (error) {
-    console.log('Error', error);
-    throw error;
+  if (trigger === 'PreSignUp_ExternalProvider') {
+  
+    await client.listUsers({
+        UserPoolId: userPoolId,
+        AttributesToGet: ['email', 'picture', 'name'],
+        Filter: `email = "${email}"`
+      })
+      .promise()
+      .then(({
+        Users
+      }) => Users.sort((a, b) => (a.UserCreateDate > b.UserCreateDate ? 1 : -1)))
+      .then(users => users.length > 0 ? users[0] : null)
+      .then(user => {
+        // user with username password already exists, do nothing
+        if (user) {
+          return user;
+        }
+
+        // user with username password does not exists, create one
+        const newUser = await client.adminCreateUser({
+            UserPoolId: userPoolId,
+            Username: email,
+            MessageAction: 'SUPPRESS', // dont send email to user
+            UserAttributes: [{
+                Name: 'name',
+                Value: name
+              },
+              {
+                Name: 'picture',
+                Value: picture
+              },
+              {
+                Name: 'email',
+                Value: email
+              },
+              {
+                Name: 'email_verified',
+                Value: emailVerified
+              }
+            ]
+          })
+          .promise();
+          // gotta set the password, else user wont be able to reset it
+          await client.adminSetUserPassword({
+              UserPoolId: userPoolId,
+              Username: newUser.Username,                                                      
+              Password: '<generate random password>',                                                       
+              Permanent: true
+          }).promise();
+    
+          return newUser.Username;
+      }).then(username => {
+        // link external user to cognito user
+        const split = identity.split('_');
+        const providerValue = split.length > 1 ? split[1] : null;
+        const provider = ['Google', 'Facebook'].find(
+          val => split[0].toUpperCase() === val.toUpperCase()
+        );
+
+        if (!provider || !providerValue) {
+          return Promise.reject(new Error('Invalid external user'));
+        }
+
+        return client.adminLinkProviderForUser({
+            UserPoolId: userPoolId,
+            DestinationUser: {
+              ProviderName: 'Cognito',
+              ProviderAttributeValue: username
+            },
+            SourceUser: {
+              ProviderName: provider,
+              ProviderAttributeName: 'Cognito_Subject',
+              ProviderAttributeValue: providerValue
+            }
+          })
+          .promise()
+      });
   }
+  return event;
+} catch (error) {
+  console.log("Error",error)
+  throw error
+}
+};
+
+module.exports = {
+  handler
 };
