@@ -169,7 +169,7 @@ const adminUpdateUserAttributes = (data) => {
 
 const listUsers = (data) => {
   var params = {
-    UserPoolId: userPoolId.userPoolId,
+    UserPoolId: data.userPoolId,
     Filter: `email = \"${data.email}"`,
   };
   return new AWS.CognitoIdentityServiceProvider().listUsers(params).promise();
