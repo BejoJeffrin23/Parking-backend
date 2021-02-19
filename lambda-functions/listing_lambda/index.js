@@ -1,6 +1,6 @@
 const DB = require('../../utils/DB');
 const Listing = require('./utils/listingModel');
-const cognito = require('../common_lambda/utils/Cognito');
+// const cognito = require('../common_lambda/utils/Cognito');
 const User = require('../user_lambda/utils/userModel');
 DB();
 
@@ -9,6 +9,8 @@ exports.handler = async (event) => {
     let tempFilter = {};
     let startDate = null;
     let endDate = null;
+    let listing = null;
+    let user = null;
     switch (event.type) {
       case 'getListing':
         return await Listing.findById(event.arguments.id);
@@ -567,7 +569,7 @@ exports.handler = async (event) => {
           { username: event.arguments.ownerId },
           { $inc: { listings: 1 } }
         );
-        await cognito.createGroup({ groupName: `${listing._id}` });
+        // await cognito.createGroup({ groupName: `${listing._id}` });
         return listing;
       case 'updateListing':
         return await Listing.findByIdAndUpdate(
@@ -586,8 +588,37 @@ exports.handler = async (event) => {
           { username: event.arguments.ownerId },
           { $inc: { listings: -1 } }
         );
-        await cognito.deleteGroup({ groupName: `${event.arguments.id}` });
+        // await cognito.deleteGroup({ groupName: `${event.arguments.id}` });
         return deletedListing;
+      case 'getStaff':
+        return (
+          await Listing.findById(event.arguments.listingId).populate({
+            path: 'staff.user',
+            // model: 'User',
+          })
+        ).staff;
+      case 'addStaff':
+        user = await User.findOne({
+          username: event.arguments.staffId,
+          active: true,
+        });
+        listing = await Listing.findById(event.arguments.listingId);
+        listing.staff.push({
+          staffId: event.arguments.staffId,
+          role: event.arguments.role,
+          user: user._id,
+        });
+        const newStaff = await listing.save();
+        newStaff.user = user;
+        return newStaff;
+      case 'updateStaffRole':
+        listing = await Listing.findById(event.arguments.listingId);
+        listing.staff.id(event.arguments.id).title = event.arguments.role;
+        return event.arguments.role;
+      case 'removeStaff':
+        listing = await Listing.findById(event.arguments.listingId);
+        listing.staff.id(event.arguments.id).remove();
+        return true;
       default:
         return null;
     }

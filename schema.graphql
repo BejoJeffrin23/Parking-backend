@@ -1,6 +1,7 @@
 scalar Long
 
 type Query {
+  getStaff(listingId: ID!): [StaffPopulate]
   getAllMessages(
     user1Id: String!
     user2Id: String!
@@ -191,6 +192,10 @@ type Query {
 }
 
 type Mutation {
+  addStaff(listingId: ID!, staffId: String!, role: String!): StaffPopulate
+  addStaff(listingId: ID!, id: ID!, role: String!): String
+  addStaff(listingId: ID!, id: ID!): Boolean
+
   sendOneMessage(
     listingLocation: String!
     senderId: String!
@@ -363,8 +368,6 @@ type Mutation {
     spaceAvailable: SpaceAvailableDataInput
     pricingDetails: PricingDetailsDataInput
     location: LocationDataMarkerInput
-    bookings: Int
-    reviews: [ID]
     createdAt: String
   ): Listing
   deleteListing(id: ID!): String
@@ -857,9 +860,23 @@ type Listing {
   pricingDetails: PricingDetailsData!
   location: LocationDataMarker!
   bookings: Int
-  reviews: [ID!]
   createdAt: String
   bookingCount: [BookingCount]
+  ratingAverage: Int
+  ratingQuantity: Int
+  staff: [Staff]
+}
+
+type Staff {
+  user: ID
+  staffId: String
+  role: String
+}
+
+type StaffPopulate {
+  user: User
+  staffId: String
+  role: String
 }
 
 type BookingCount {

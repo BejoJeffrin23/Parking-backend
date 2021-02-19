@@ -2,6 +2,22 @@ const mongoose = require('mongoose');
 require('mongoose-long')(mongoose);
 const Long = mongoose.Schema.Types.Long;
 
+const staffSchema = new mongoose.Schema({
+  user: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'User',
+    required: [true, 'Staff must be existing user'],
+  },
+  staffId: {
+    type: String,
+    required: true,
+  },
+  role: {
+    type: String,
+    required: true,
+  },
+});
+
 const markerSchema = new mongoose.Schema({
   type: {
     type: String,
@@ -317,16 +333,22 @@ const listingSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
-  reviews: [
-    {
-      type: mongoose.Schema.ObjectId,
-      ref: 'reviews',
-    },
-  ],
   createdAt: {
     type: Date,
     default: new Date(),
   },
+  ratingAverage: {
+    type: Number,
+    default: 4.5,
+    // min: [1, 'A Listing rating must be above 1.0'],
+    max: [5, 'A Listing rating must be below 5.0'],
+    set: (val) => Math.round(val * 10) / 10,
+  },
+  ratingQuantity: {
+    type: Number,
+    default: 0,
+  },
+  staff: [staffSchema],
 });
 
 listingSchema.index({ location: '2dsphere' });
