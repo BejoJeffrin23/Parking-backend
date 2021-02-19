@@ -26,6 +26,7 @@ exports.handler = async (event) => {
         if (username !== null) {
           tempFilter.ownerId = username;
         }
+
         if (active !== null) {
           tempFilter.published = active;
         }
