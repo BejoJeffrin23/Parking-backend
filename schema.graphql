@@ -1031,6 +1031,7 @@ type CustomTimeRange {
   startDate: AWSDateTime
   endDate: AWSDateTime
 }
+
 input CustomTimeRangeInput {
   startDate: AWSDateTime
   endDate: AWSDateTime
