@@ -231,6 +231,27 @@
   field: deleteListing
   request: listing/mutation.deleteListing.vtl
   response: response.vtl
+# Listing Staff
+- dataSource: listing
+  type: Query
+  field: getStaff
+  request: listing/query.getStaff.vtl
+  response: response.vtl
+- dataSource: listing
+  type: Mutation
+  field: addStaff
+  request: listing/mutation.addStaff.vtl
+  response: response.vtl
+- dataSource: listing
+  type: Mutation
+  field: removeStaff
+  request: listing/mutation.removeStaff.vtl
+  response: response.vtl
+- dataSource: listing
+  type: Mutation
+  field: deleteListing
+  request: listing/mutation.deleteListing.vtl
+  response: response.vtl
 # Booking
 - dataSource: booking
   type: Query

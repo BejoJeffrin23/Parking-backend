@@ -193,8 +193,8 @@ type Query {
 
 type Mutation {
   addStaff(listingId: ID!, staffId: String!, role: String!): StaffPopulate
-  addStaff(listingId: ID!, id: ID!, role: String!): String
-  addStaff(listingId: ID!, id: ID!): Boolean
+  updateStaffRole(listingId: ID!, id: ID!, role: String!): String
+  removeStaff(listingId: ID!, id: ID!): Boolean
 
   sendOneMessage(
     listingLocation: String!
