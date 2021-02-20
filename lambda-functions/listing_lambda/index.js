@@ -617,7 +617,8 @@ exports.handler = async (event) => {
         return newStaff;
       case 'updateStaffRole':
         listing = await Listing.findById(event.arguments.listingId);
-        listing.staff.id(event.arguments.id).title = event.arguments.role;
+        listing.staff.id(event.arguments.id).role = event.arguments.role;
+        await listing.save();
         return event.arguments.role;
       case 'removeStaff':
         listing = await Listing.findById(event.arguments.listingId);
