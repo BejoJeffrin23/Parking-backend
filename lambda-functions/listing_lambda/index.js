@@ -565,7 +565,7 @@ exports.handler = async (event) => {
       case 'getOwnerListings':
         return await Listing.find({ ownerId: event.arguments.ownerId }).exec();
       case 'createListing':
-        let listing = await Listing.create(event.arguments);
+        listing = await Listing.create(event.arguments);
         User.findOneAndUpdate(
           { username: event.arguments.ownerId },
           { $inc: { listings: 1 } }
