@@ -249,8 +249,8 @@
   response: response.vtl
 - dataSource: listing
   type: Mutation
-  field: deleteListing
-  request: listing/mutation.deleteListing.vtl
+  field: updateStaffRole
+  request: listing/mutation.updateStaffRole.vtl
   response: response.vtl
 # Booking
 - dataSource: booking
