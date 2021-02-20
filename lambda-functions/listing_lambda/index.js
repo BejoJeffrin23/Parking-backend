@@ -599,11 +599,13 @@ exports.handler = async (event) => {
           })
         ).staff;
       case 'addStaff':
+        listing = await Listing.findById(event.arguments.listingId);
         user = await User.findOne({
           username: event.arguments.staffId,
           active: true,
         });
-        listing = await Listing.findById(event.arguments.listingId);
+        // if(listing.ownerId === event.arguments.staffId)
+        // dont allow owner to add him self throw new Error('Owner can't add him self')
         listing.staff.push({
           staffId: event.arguments.staffId,
           role: event.arguments.role,
