@@ -622,6 +622,7 @@ exports.handler = async (event) => {
       case 'removeStaff':
         listing = await Listing.findById(event.arguments.listingId);
         listing.staff.id(event.arguments.id).remove();
+        await listing.save();
         return true;
       default:
         return null;
