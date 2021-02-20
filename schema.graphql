@@ -868,12 +868,14 @@ type Listing {
 }
 
 type Staff {
+  _id: ID
   user: ID
   staffId: String
   role: String
 }
 
 type StaffPopulate {
+  _id: ID
   user: User
   staffId: String
   role: String

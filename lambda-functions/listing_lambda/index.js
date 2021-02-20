@@ -609,7 +609,10 @@ exports.handler = async (event) => {
           role: event.arguments.role,
           user: user._id,
         });
-        const newStaff = await listing.save();
+        await listing.save();
+        newStaff = listing.staff.filter(
+          (s) => s.staffId === event.arguments.staffId
+        )[0];
         newStaff.user = user;
         return newStaff;
       case 'updateStaffRole':
